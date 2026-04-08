@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/PMQ.Mediator/PMQ.Mediator.csproj" Id="2dc2a51d-196b-4708-ba10-0506e3718024" />
+  <Project Path="tests/PMQ.Mediator.Tests/PMQ.Mediator.Tests.csproj" />
+  <Project Path="tests/PMQ.Mediator.IntegrationTests/PMQ.Mediator.IntegrationTests.csproj" />
+</Solution>
