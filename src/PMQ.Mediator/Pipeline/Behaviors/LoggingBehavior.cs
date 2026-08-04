@@ -15,26 +15,51 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     /// <inheritdoc />
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(next);
+
         var requestName = typeof(TRequest).Name;
 
-        logger.LogInformation("Handling {RequestName}", requestName);
+        logger.HandlingRequest(requestName);
 
-        var stopwatch = Stopwatch.StartNew();
+        var timestamp = Stopwatch.GetTimestamp();
 
         try
         {
             var response = await next(cancellationToken);
+            var elapsed = ElapsedMilliseconds(timestamp);
 
-            stopwatch.Stop();
-            logger.LogInformation("Handled {RequestName} in {ElapsedMilliseconds}ms", requestName, stopwatch.ElapsedMilliseconds);
+            logger.HandledRequest(requestName, elapsed);
 
             return response;
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            stopwatch.Stop();
-            logger.LogError(ex, "Error handling {RequestName} after {ElapsedMilliseconds}ms", requestName, stopwatch.ElapsedMilliseconds);
+            var elapsed = ElapsedMilliseconds(timestamp);
+
+            logger.RequestFailed(exception, requestName, elapsed);
             throw;
         }
     }
+
+    private static long ElapsedMilliseconds(long timestamp)
+        => (long)Stopwatch.GetElapsedTime(timestamp).TotalMilliseconds;
+}
+
+/// <summary>
+/// Compile-time generated log messages for <see cref="LoggingBehavior{TRequest, TResponse}"/>.
+/// </summary>
+/// <remarks>
+/// Source-generated logging skips argument boxing and message formatting when the level is
+/// disabled — relevant here because this behavior runs on every single request.
+/// </remarks>
+internal static partial class LoggingBehaviorLogs
+{
+    [LoggerMessage(EventId = 100, Level = LogLevel.Information, Message = "Handling {RequestName}")]
+    public static partial void HandlingRequest(this ILogger logger, string requestName);
+
+    [LoggerMessage(EventId = 101, Level = LogLevel.Information, Message = "Handled {RequestName} in {ElapsedMilliseconds}ms")]
+    public static partial void HandledRequest(this ILogger logger, string requestName, long elapsedMilliseconds);
+
+    [LoggerMessage(EventId = 102, Level = LogLevel.Error, Message = "Error handling {RequestName} after {ElapsedMilliseconds}ms")]
+    public static partial void RequestFailed(this ILogger logger, Exception exception, string requestName, long elapsedMilliseconds);
 }
