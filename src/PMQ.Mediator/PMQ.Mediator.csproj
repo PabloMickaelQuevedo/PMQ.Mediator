@@ -1,34 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RootNamespace>PMQ.Mediator</RootNamespace>
     <PackageId>PMQ.Mediator</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Pablo Mickael Quevedo</Authors>
-    <Company>Pablo Mickael Quevedo</Company>
+    <Version>1.1.0</Version>
     <Product>PMQ.Mediator</Product>
     <Description>
       A lightweight mediator pattern implementation for .NET applications with FluentValidation integration, request/response pipeline behaviors, streaming support, and notification publishing.
     </Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/PabloMickaelQuevedo/PMQ.Mediator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PabloMickaelQuevedo/PMQ.Mediator.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageTags>mediator;cqrs;pipeline;fluentvalidation;requests;notifications;streaming</PackageTags>
     <IncludeLicenseFile>true</IncludeLicenseFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
 </Project>

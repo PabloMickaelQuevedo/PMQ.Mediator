@@ -8,7 +8,7 @@ public readonly struct Unit : IEquatable<Unit>, IComparable<Unit>, IComparable
     /// <summary>
     /// Default and only value of the <see cref="Unit"/> type.
     /// </summary>
-    public static readonly Unit Value = default;
+    public static readonly Unit Value;
 
     /// <summary>
     /// A pre-cached completed <see cref="Task{Unit}"/> with the default <see cref="Unit"/> value.
@@ -42,4 +42,24 @@ public readonly struct Unit : IEquatable<Unit>, IComparable<Unit>, IComparable
     /// Determines whether two <see cref="Unit"/> instances are not equal. Always returns <c>false</c>.
     /// </summary>
     public static bool operator !=(Unit left, Unit right) => false;
+
+    /// <summary>
+    /// Compares two <see cref="Unit"/> instances. Always returns <c>false</c>: every value is equal.
+    /// </summary>
+    public static bool operator <(Unit left, Unit right) => false;
+
+    /// <summary>
+    /// Compares two <see cref="Unit"/> instances. Always returns <c>true</c>: every value is equal.
+    /// </summary>
+    public static bool operator <=(Unit left, Unit right) => true;
+
+    /// <summary>
+    /// Compares two <see cref="Unit"/> instances. Always returns <c>false</c>: every value is equal.
+    /// </summary>
+    public static bool operator >(Unit left, Unit right) => false;
+
+    /// <summary>
+    /// Compares two <see cref="Unit"/> instances. Always returns <c>true</c>: every value is equal.
+    /// </summary>
+    public static bool operator >=(Unit left, Unit right) => true;
 }

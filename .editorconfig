@@ -1,0 +1,29 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{json,yml,yaml,xml,csproj,props,targets,slnx}]
+indent_size = 2
+
+[*.cs]
+csharp_using_directive_placement = outside_namespace:warning
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_sort_system_directives_first = true
+
+#### Analisadores ####
+# CA1711 / CA1716: a API pública espelha de propósito a do MediatR (RequestHandlerDelegate,
+# parâmetro `next`) para que a migração seja um simples troca-de-using. Renomear quebraria
+# todos os consumidores em troca de conformidade cosmética.
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1716.severity = none
+
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1861.severity = none
+dotnet_diagnostic.CA2007.severity = none
