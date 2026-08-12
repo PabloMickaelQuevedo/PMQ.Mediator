@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>PMQ.Mediator</RootNamespace>
     <PackageId>PMQ.Mediator</PackageId>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Product>PMQ.Mediator</Product>
     <Description>
       A lightweight mediator pattern implementation for .NET applications with FluentValidation integration, request/response pipeline behaviors, streaming support, and notification publishing.
