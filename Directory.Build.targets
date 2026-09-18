@@ -21,4 +21,47 @@
     <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
+  <!--
+    O dependabot não avalia Condition de MSBuild: ele casa PackageVersion por ID e reescreve
+    todas as ocorrências com a mesma versão. Num arquivo com um grupo por TFM, isso enfia a
+    versão do net10 dentro do grupo net8.0 — e o build passa, porque os pacotes 10.0.x têm
+    assets para net8.0. O estrago só aparece no consumidor, forçado a subir de assembly, o
+    que é exatamente o que o comentário em Directory.Packages.props pede para evitar.
+
+    Este target transforma esse caso em erro de build. Roda uma vez por TFM, então
+    @(PackageVersion) aqui já contém apenas o grupo do target sendo compilado: basta comparar
+    o major do pacote com o major do TFM.
+
+    Só vale para pacotes que acompanham o runtime. Microsoft.NET.Test.Sdk, Microsoft.IdentityModel.*
+    e afins têm cadência própria e ficam de fora do casamento de prefixo de propósito.
+  -->
+  <Target Name="ValidarLinhaDoRuntimePorTfm" BeforeTargets="Build" Condition="'$(TargetFramework)' != ''">
+
+    <PropertyGroup>
+      <_MajorDoTfm>$([System.Text.RegularExpressions.Regex]::Match('$(TargetFramework)', '^net(\d+)\.').Groups[1].Value)</_MajorDoTfm>
+    </PropertyGroup>
+
+    <!--
+      Em dois passos de propósito: o major do pacote é calculado como metadado, onde função de
+      propriedade sobre %(Version) é permitida, e a comparação fica sendo string simples.
+      Tudo numa condição só esbarra em MSB4092.
+    -->
+    <ItemGroup>
+      <_PacoteDeRuntime Include="@(PackageVersion)"
+                        Condition="'$(_MajorDoTfm)' != ''
+                                   and ( $([System.String]::Copy('%(Identity)').StartsWith('Microsoft.Extensions.'))
+                                         or $([System.String]::Copy('%(Identity)').StartsWith('Microsoft.AspNetCore.')) )">
+        <MajorDoPacote>$([System.Version]::Parse('%(Version)').Major)</MajorDoPacote>
+      </_PacoteDeRuntime>
+
+      <_ForaDaLinhaDoRuntime Include="@(_PacoteDeRuntime)"
+                             Condition="'%(MajorDoPacote)' != '$(_MajorDoTfm)'" />
+    </ItemGroup>
+
+    <Error Condition="'@(_ForaDaLinhaDoRuntime)' != ''"
+           Code="PMQ0001"
+           Text="Pacote de runtime fora da linha do TFM $(TargetFramework): @(_ForaDaLinhaDoRuntime->'%(Identity) %(Version)', '; '). Cada ItemGroup condicional em Directory.Packages.props deve pedir a versão da sua própria linha; subir o grupo net8.0 para 10.x força uplift de assembly em todo consumidor net8.0." />
+
+  </Target>
+
 </Project>
