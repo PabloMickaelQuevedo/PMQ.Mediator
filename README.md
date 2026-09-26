@@ -13,6 +13,14 @@ A lightweight mediator pattern implementation for .NET applications with FluentV
 - 🔍 **Assembly Scanning** - Auto-discovers handlers with prefix filtering
 - ⚙️ **Highly Configurable** - Lifetime, culture, custom validation failure handling
 
+## Target Frameworks
+
+This package targets `net8.0` and `net10.0`.
+
+> **.NET 8 reaches end of support on 2026-11-10.** Version 2.0, released after that date, will
+> target `net10.0` only. Applications that stay on .NET 8 can keep using 1.x, which will receive
+> security fixes only, for six months after 2.0 is released.
+
 ## Installation
 
 ```bash
